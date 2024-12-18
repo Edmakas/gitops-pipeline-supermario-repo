@@ -22,7 +22,7 @@ jobs:
 
       - name: Get Docker Image from Docker Hub
         run: |
-          docker pull ddocker.io/eckanas/pakemon:${{ env.VERSION }}
+          docker pull docker.io/eckanas/pakemon:${{ env.VERSION }}
           docker save -o supermariolatestdockerimage.tar docker.io/eckanas/pakemon:${{ env.VERSION }}
 
       - name: Run Trivy vulnerability scanner in tarball mode
