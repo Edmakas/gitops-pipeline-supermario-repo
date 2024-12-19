@@ -1,13 +1,13 @@
 name: "Run Container Scan on Super Mario Docker Image with Quality Gate"
 
-on:
-  push:
-    branches:
-      - main
+# on:
+#   push:
+#     branches:
+#       - main
 
 env:
-  # VERSION: $(( $(cat version.txt) + 1 ))
-  VERSION: 2
+  VERSION: $(( $(cat version.txt) + 1 ))
+  #VERSION: 2
 
 jobs:
   run_container_image_scan_on_supermario_docker_image:
