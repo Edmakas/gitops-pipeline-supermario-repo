@@ -22,13 +22,20 @@ jobs:
       - name: Calculate New Version
         id: calculate_version
         run: |
-          if [[ -f version.txt ]]; then
-            VERSION=$(( $(cat version.txt) + 1 ))
-          else
-            VERSION=1
+          # Ensure version.txt exists or initialize it
+          if [[ ! -f version.txt ]]; then
+            echo "0" > version.txt
           fi
-          echo $VERSION > version.txt
-          echo "VERSION=$VERSION" >> $GITHUB_ENV
+
+          # Read and increment the version
+          VERSION=$(cat version.txt)
+          if [[ ! $VERSION =~ ^[0-9]+$ ]]; then
+            echo "Error: version.txt contains invalid data."
+            exit 1
+          fi
+          NEW_VERSION=$((VERSION + 1))
+          echo $NEW_VERSION > version.txt
+          echo "VERSION=$NEW_VERSION" >> $GITHUB_ENV
 
       - name: Build and Push Docker Image
         run: |
