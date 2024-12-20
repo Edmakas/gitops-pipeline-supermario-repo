@@ -5,10 +5,6 @@ name: "Run Container Scan on Super Mario Docker Image with Quality Gate"
 #     branches:
 #       - main
 
-env:
-  VERSION: $(( $(cat version.txt) + 1 ))
-  #VERSION: 2
-
 jobs:
   run_container_image_scan_on_supermario_docker_image:
     runs-on: ubuntu-latest
@@ -19,6 +15,24 @@ jobs:
 
       - name: Login to Docker Hub
         run: echo "${{ secrets.DOCKERHUB_TOKEN }}" | docker login -u "${{ secrets.DOCKERHUB_USERNAME }}" --password-stdin
+
+      - name: Calculate New Version
+        id: calculate_version
+        run: |
+          # Ensure version.txt exists or initialize it
+          if [[ ! -f version.txt ]]; then
+            echo "0" > version.txt
+          fi
+
+          # Read and increment the version
+          VERSION=$(cat version.txt)
+          if [[ ! $VERSION =~ ^[0-9]+$ ]]; then
+            echo "Error: version.txt contains invalid data."
+            exit 1
+          fi
+          NEW_VERSION=$((VERSION + 1))
+          echo $NEW_VERSION > version.txt
+          echo "VERSION=$NEW_VERSION" >> $GITHUB_ENV
 
       - name: Get Docker Image from Docker Hub
         run: |
